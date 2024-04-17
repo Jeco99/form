@@ -1,32 +1,13 @@
-"use client";
+import { createClient } from "@/utils/supabase/server";
+import FormBuilder from "./formbuilder";
 
-import { Box, Container, TextInput, Title } from "@mantine/core";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { FormData } from "@/utils/client/dataInterface";
-import { formbuilder_Post } from "./action_formbuilder";
+export default async function Form() {
+  const supabase = createClient();
 
-export default function FormBuilder() {
-  const { register, handleSubmit } = useForm<FormData>();
-  const onSubmit: SubmitHandler<FormData> = async (dataForm) => {
-    formbuilder_Post(dataForm);
-  };
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  // console.log("get_user", user);
 
-  return (
-    <Box>
-      <Title>Form Builder </Title>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Container>
-          <TextInput
-            label="Form Name"
-            {...register("formname", { required: true })}
-          />
-          <TextInput
-            label="Form Description"
-            {...register("formdescription", { required: true })}
-          />
-          <input type="submit" value={"Submit"} />
-        </Container>
-      </form>
-    </Box>
-  );
+  return <FormBuilder user={user} />;
 }

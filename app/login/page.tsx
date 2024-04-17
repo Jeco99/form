@@ -31,16 +31,21 @@ export default function LoginPage() {
             placeholder="Enter your password"
             required
           />
+          <Flex>
+            <Button variant="filled" color="gray" type="submit">
+              Log in
+            </Button>
+          </Flex>
         </form>
-        <Button variant="filled" color="gray" type="submit">
-          Log in
-        </Button>
+
         <Link href={"/signup"}>
           <Button variant="filled" color="blue" type="button">
             Sign Up
           </Button>
         </Link>
+
         <LogInWithGoogle />
+
 
         {/* <button formAction={login}>Log in</button>
           <button formAction={signup}>Sign up</button> */}

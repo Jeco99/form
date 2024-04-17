@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
 
+//Create a function that allows the user to sign in
 export async function login(formData: FormData) {
   const supabase = createClient();
 
@@ -14,6 +15,7 @@ export async function login(formData: FormData) {
   };
   const { error } = await supabase.auth.signInWithPassword(data);
 
+  console.log("Log in User Session", supabase.auth.getSession());
   if (error) {
     redirect("/error");
   }
