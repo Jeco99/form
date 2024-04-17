@@ -1,6 +1,7 @@
 import { Container, Flex, TextInput, Button } from "@mantine/core";
 import { login } from "./action";
 import Link from "next/link";
+import LogInWithGoogle from "@/component/googleauth/loginwithgoogle";
 
 export default function LoginPage() {
   return (
@@ -41,6 +42,7 @@ export default function LoginPage() {
             Sign Up
           </Button>
         </Link>
+        <LogInWithGoogle />
         {/* <button formAction={login}>Log in</button>
           <button formAction={signup}>Sign up</button> */}
       </Flex>

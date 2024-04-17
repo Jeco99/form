@@ -19,6 +19,7 @@ type FieldData = {
     field_type: string;
     field_required: boolean;
     field_order: number;
+    field_option: string; //just added test
   }[];
 };
 
@@ -34,11 +35,13 @@ type FormData = {
 // }
 
 export default function NestedForm() {
-  const { control, handleSubmit } = useForm<FieldData>();
+  const { control, handleSubmit, watch } = useForm<FieldData>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "field",
   });
+  //added watch
+  console.log(watch("field"));
 
   return (
     <>
@@ -63,6 +66,7 @@ export default function NestedForm() {
               field_type: "",
               field_required: true,
               field_order: 0,
+              field_option: "", // test
             });
           }}
         >
@@ -99,7 +103,7 @@ const FormInput = () => {
 };
 
 const FieldInput = ({ control, remove, index }) => {
-  const { register } = useForm();
+  const { register, watch } = useForm();
   return (
     <div>
       <h1>Field</h1>
@@ -122,6 +126,15 @@ const FieldInput = ({ control, remove, index }) => {
           />
         )}
       />
+
+      {/* not working if I click the select */}
+      {(watch(`field.${index}.field_type`) === "select" ||
+        watch(`field.${index}.field_type`) === "multiSelect") && (
+        <TextInput
+          {...register(`field.${index}.field_option` as const)}
+          label="Options (comma-separated)"
+        />
+      )}
 
       <Checkbox
         {...register(`field.${index}.field_required` as const)}
