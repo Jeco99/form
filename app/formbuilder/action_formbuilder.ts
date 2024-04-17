@@ -2,7 +2,6 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { FieldData, FormData } from "@/utils/client/dataInterface";
-import { redirect } from "next/navigation";
 
 export async function formbuilder_Post(dataForm: FormData) {
   const supabase = createClient();
@@ -20,8 +19,12 @@ export async function formbuilder_Post(dataForm: FormData) {
     const formLength = data?.length;
     const form_id = data[formLength - 1];
     const id = form_id["form_id"];
-    redirect(`/field/${id}`);
+    return id;
   }
+}
+
+export async function get_id_form_name(id: string) {
+  return id;
 }
 
 export async function fieldbuilder_Post(dataForm: FieldData) {

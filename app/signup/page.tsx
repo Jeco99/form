@@ -1,20 +1,24 @@
+"use client";
+
 import { Container, Flex, TextInput, Button, Title } from "@mantine/core";
 import { signup } from "./action";
 import Link from "next/link";
+import LogInWithGoogle from "@/component/googleauth/loginwithgoogle";
 
 export default function Signup() {
   return (
     <Container>
       <Title ta={"center"}>Create an Account</Title>
-      <form action={signup}>
-        <Flex
-          mih={50}
-          gap="md"
-          justify="center"
-          align="center"
-          direction="column"
-          wrap="nowrap"
-        >
+
+      <Flex
+        mih={50}
+        gap="md"
+        justify="center"
+        align="center"
+        direction="column"
+        wrap="nowrap"
+      >
+        <form action={signup}>
           <TextInput
             label="Email"
             type="email"
@@ -34,13 +38,14 @@ export default function Signup() {
           <Button variant="filled" color="gray" type="submit">
             Sign Up
           </Button>
-          <Link href={"/login"}>
-            <Button variant="filled" color="blue" type="button">
-              Already have an account
-            </Button>
-          </Link>
-        </Flex>
-      </form>
+        </form>
+        <Link href={"/login"}>
+          <Button variant="filled" color="blue" type="button">
+            Already have an account
+          </Button>
+        </Link>
+        <LogInWithGoogle />
+      </Flex>
     </Container>
   );
 }

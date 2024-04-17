@@ -1,11 +1,19 @@
 "use client";
 
+import { TextInput, Select, Checkbox, Container } from "@mantine/core";
 import * as React from "react";
-import { useForm, useFieldArray, useWatch } from "react-hook-form";
+import {
+  useForm,
+  useFieldArray,
+  Controller,
+  SubmitHandler,
+} from "react-hook-form";
+import {
+  formbuilder_Post,
+  get_id_form_name,
+} from "../formbuilder/action_formbuilder";
 
 type FieldData = {
-  form_name: string;
-  form_description: string;
   field: {
     field_label: string;
     field_type: string;
@@ -14,27 +22,35 @@ type FieldData = {
   }[];
 };
 
+type FormData = {
+  form_name: string;
+  form_description: string;
+};
+
+// type SelectData = {
+//   select: {
+//     select_data: string;
+//  }[]
+// }
+
 export default function NestedForm() {
   const { control, handleSubmit } = useForm<FieldData>();
-
-  const { fields, append, update } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "field",
   });
 
   return (
     <>
-      <h1>Edit</h1>
+      <FormInput />
       <form onSubmit={handleSubmit((data) => console.log(data))}>
-        <FormName_And_FormDescription update={update} control={control} />
         {fields.map((field, index) => (
           <>
             <FieldInput
               key={field.id}
               control={control}
-              update={update}
               index={index}
-              value={field}
+              remove={remove}
             />
           </>
         ))}
@@ -42,7 +58,12 @@ export default function NestedForm() {
         <button
           type="button"
           onClick={() => {
-            append({ firstName: "" });
+            append({
+              field_label: "",
+              field_type: "",
+              field_required: true,
+              field_order: 0,
+            });
           }}
         >
           append
@@ -52,66 +73,72 @@ export default function NestedForm() {
     </>
   );
 }
+const FormInput = () => {
+  const { register, handleSubmit } = useForm<FormData>();
+  const onSubmit: SubmitHandler<FormData> = async (dataForm) => {
+    formbuilder_Post(dataForm);
+    const id = await formbuilder_Post(dataForm);
 
-const FormName_And_FormDescription = ({ update }) => {
-  const { register, handleSubmit } = useForm();
-
+    await get_id_form_name(id);
+  };
   return (
-    <>
-      <input
-        placeholder="Form Name"
-        {...register("form_name", { required: true })}
-      />
-      <input
-        placeholder="Form Description"
-        {...register("form_decription", { required: true })}
-      />
-
-      <button type="button" onClick={handleSubmit((data) => update(data))}>
-        Submit
-      </button>
-    </>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Container>
+        <TextInput
+          label="Form Name"
+          {...register("form_name", { required: true })}
+        />
+        <TextInput
+          label="Form Description"
+          {...register("form_description", { required: true })}
+        />
+        <input type="submit" value={"Submit"} />
+      </Container>
+    </form>
   );
 };
 
-const Display = ({ control, index }) => {
-  const data = useWatch({
-    control,
-    name: `array.${index}`,
-  });
-  return <p>{data?.firstName}</p>;
-};
-
-const FieldInput = ({ update, index, value, control }) => {
-  const { register, handleSubmit } = useForm({
-    defaultValues: value,
-  });
-
+const FieldInput = ({ control, remove, index }) => {
+  const { register } = useForm();
   return (
     <div>
-      <h1>Form Name</h1>
-      <input
+      <h1>Field</h1>
+
+      <TextInput
+        label="Label"
         placeholder="label"
-        {...register(`field_label`, { required: true })}
+        {...register(`field.${index}.field_label` as const, {
+          required: true,
+        })}
       />
-      <input
-        placeholder="type"
-        {...register(`field_type`, { required: true })}
-      />
-      <input
-        placeholder="required"
-        {...register(`field_required`, { required: true })}
-      />
-      <input
-        placeholder="order"
-        {...register(`field_order`, { required: true })}
+      <Controller
+        name={`field.${index}.field_type` as const}
+        control={control}
+        render={({ field }) => (
+          <Select
+            {...field}
+            label="Type"
+            data={["text", "number", "date", "select", "multiSelect"]}
+          />
+        )}
       />
 
-      <button
-        type="button"
-        onClick={handleSubmit((data) => update(index, data))}
-      >
-        Submit
+      <Checkbox
+        {...register(`field.${index}.field_required` as const)}
+        label="Required"
+      />
+
+      <TextInput
+        label="Order"
+        type="number"
+        placeholder="Order"
+        {...register(`field.${index}.field_order` as const, {
+          valueAsNumber: true,
+          required: true,
+        })}
+      />
+      <button type="button" onClick={() => remove(index)}>
+        Remove
       </button>
     </div>
   );
