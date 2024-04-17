@@ -1,19 +1,20 @@
 import { Container, Flex, TextInput, Button } from "@mantine/core";
 import { login } from "./action";
 import Link from "next/link";
+import GoogleSignIn from "@/component/googleLogIn";
 
 export default function LoginPage() {
   return (
     <Container>
-      <form action={login}>
-        <Flex
-          mih={50}
-          gap="md"
-          justify="center"
-          align="center"
-          direction="column"
-          wrap="nowrap"
-        >
+      <Flex
+        mih={50}
+        gap="md"
+        justify="center"
+        align="center"
+        direction="column"
+        wrap="nowrap"
+      >
+        <form action={login}>
           <TextInput
             label="Email"
             type="email"
@@ -30,19 +31,20 @@ export default function LoginPage() {
             placeholder="Enter your password"
             required
           />
-          <Button variant="filled" color="gray" type="submit">
-            Log in
+        </form>
+        <Button variant="filled" color="gray" type="submit">
+          Log in
+        </Button>
+        <Link href={"/signup"}>
+          <Button variant="filled" color="blue" type="button">
+            Sign Up
           </Button>
-          <Link href={"/signup"}>
-            <Button variant="filled" color="blue" type="button">
-              Sign Up
-            </Button>
-          </Link>
+        </Link>
+        <GoogleSignIn />
 
-          {/* <button formAction={login}>Log in</button>
+        {/* <button formAction={login}>Log in</button>
           <button formAction={signup}>Sign up</button> */}
-        </Flex>
-      </form>
+      </Flex>
     </Container>
   );
 }
