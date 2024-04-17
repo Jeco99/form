@@ -1,13 +1,14 @@
 export type FormData = {
-  formname: string;
-  formdescription: string;
+  form_name: string;
+  form_description: string;
 };
 
 export type FieldData = {
   field: {
-    form_label: string;
-    form_type: string;
-    form_required: boolean;
-    form_order: number;
+    field_label: string;
+    field_type: string;
+    field_required: boolean;
+    field_order: number;
+    form_id: string | undefined | string[];
   }[];
 };

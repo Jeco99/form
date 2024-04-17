@@ -5,15 +5,15 @@ import Link from "next/link";
 export default function LoginPage() {
   return (
     <Container>
-      <form action={login}>
-        <Flex
-          mih={50}
-          gap="md"
-          justify="center"
-          align="center"
-          direction="column"
-          wrap="nowrap"
-        >
+      <Flex
+        mih={50}
+        gap="md"
+        justify="center"
+        align="center"
+        direction="column"
+        wrap="nowrap"
+      >
+        <form action={login}>
           <TextInput
             label="Email"
             type="email"
@@ -30,19 +30,20 @@ export default function LoginPage() {
             placeholder="Enter your password"
             required
           />
-          <Button variant="filled" color="gray" type="submit">
-            Log in
-          </Button>
-          <Link href={"/signup"}>
-            <Button variant="filled" color="blue" type="button">
-              Sign Up
+          <Flex>
+            <Button variant="filled" color="gray" type="submit">
+              Log in
             </Button>
-          </Link>
-
-          {/* <button formAction={login}>Log in</button>
+          </Flex>
+        </form>
+        <Link href={"/signup"}>
+          <Button variant="filled" color="blue" type="button">
+            Sign Up
+          </Button>
+        </Link>
+        {/* <button formAction={login}>Log in</button>
           <button formAction={signup}>Sign up</button> */}
-        </Flex>
-      </form>
+      </Flex>
     </Container>
   );
 }

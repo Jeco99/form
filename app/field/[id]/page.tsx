@@ -3,15 +3,22 @@
 import { Box, Select, TextInput, Checkbox } from "@mantine/core";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { FieldData } from "@/utils/client/dataInterface";
+import { useParams } from "next/navigation";
+import { fieldbuilder_Post } from "@/app/formbuilder/action_formbuilder";
 
 export default function FieldForm() {
+  const params = useParams();
   const { register, control, handleSubmit } = useForm<FieldData>();
   const { fields, append, remove } = useFieldArray({
     name: "field",
     control,
   });
-  const onSubmit = (data: FieldData) => console.log(data);
-
+  const onSubmit = (data: FieldData) => {
+    fieldbuilder_Post(data);
+    console.log("client data", data);
+  };
+  console.log("test", params?.id);
+  console.log("params", params);
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -22,12 +29,12 @@ export default function FieldForm() {
                 <TextInput
                   label="Label"
                   placeholder="label"
-                  {...register(`field.${index}.form_label` as const, {
+                  {...register(`field.${index}.field_label` as const, {
                     required: true,
                   })}
                 />
                 <Controller
-                  name={`field.${index}.form_type` as const}
+                  name={`field.${index}.field_type` as const}
                   control={control}
                   render={({ field }) => (
                     <Select
@@ -39,7 +46,7 @@ export default function FieldForm() {
                 />
 
                 <Checkbox
-                  {...register(`field.${index}.form_required` as const)}
+                  {...register(`field.${index}.field_required` as const)}
                   label="Required"
                 />
 
@@ -47,7 +54,7 @@ export default function FieldForm() {
                   label="Order"
                   type="number"
                   placeholder="Order"
-                  {...register(`field.${index}.form_order` as const, {
+                  {...register(`field.${index}.field_order` as const, {
                     valueAsNumber: true,
                     required: true,
                   })}
@@ -64,10 +71,11 @@ export default function FieldForm() {
           type="button"
           onClick={() =>
             append({
-              form_label: "",
-              form_type: "",
-              form_required: true,
-              form_order: 0,
+              field_label: "",
+              field_type: "",
+              field_required: true,
+              field_order: 0,
+              form_id: params?.id,
             })
           }
         >
