@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
 
+//Create a function that allows the user to sign in
 export async function login(formData: FormData) {
   const supabase = createClient();
 
@@ -14,6 +15,7 @@ export async function login(formData: FormData) {
   };
   const { error } = await supabase.auth.signInWithPassword(data);
 
+  console.log("Log in User Session", supabase.auth.getSession());
   if (error) {
     redirect("/error");
   }
@@ -21,23 +23,3 @@ export async function login(formData: FormData) {
   revalidatePath("/", "layout");
   redirect("/formbuilder");
 }
-
-// export async function signup(formData: FormData) {
-//   const supabase = createClient()
-
-//   // type-casting here for convenience
-//   // in practice, you should validate your inputs
-//   const data = {
-//     email: formData.get('email') as string,
-//     password: formData.get('password') as string,
-//   }
-
-//   const { error } = await supabase.auth.signUp(data)
-
-//   if (error) {
-//     redirect('/error')
-//   }
-
-//   revalidatePath('/', 'layout')
-//   redirect('/account')
-// }
