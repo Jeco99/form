@@ -15,11 +15,11 @@ export async function login(formData: FormData) {
   };
   const { error } = await supabase.auth.signInWithPassword(data);
 
-  console.log("Log in User Session", supabase.auth.getSession());
+  // console.log("Log in User Session", await supabase.auth.getSession());
   if (error) {
     redirect("/error");
   }
 
   revalidatePath("/", "layout");
-  redirect("/formbuilder");
+  redirect("/displayform");
 }
