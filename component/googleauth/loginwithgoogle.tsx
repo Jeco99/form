@@ -10,5 +10,15 @@ export default function LogInWithGoogle() {
     });
   };
 
-  return <Button onClick={googleOauth}>Login with google</Button>;
+  return (
+    <Button
+      justify="center"
+      fullWidth
+      color="blue"
+      type="button"
+      onClick={googleOauth}
+    >
+      Login with google
+    </Button>
+  );
 }

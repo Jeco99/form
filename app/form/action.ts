@@ -6,10 +6,11 @@ import { redirect } from "next/navigation";
 export default async function createForm(dataForm: FormData) {
   try {
     const supabase = createClient();
-    console.log(dataForm);
-    const { data, error } = await supabase.rpc("inserteddata", dataForm);
-
+    //console.log(dataForm);
+    const { data, error } = await supabase.rpc("data_Insertion", dataForm);
+    console.log("data", data);
     if (error) {
+      console.log("error", error);
       throw error;
     }
 
@@ -17,8 +18,6 @@ export default async function createForm(dataForm: FormData) {
       console.log("Data Successfully Inserted");
       redirect("/");
     }
-
-    return data;
   } catch (error) {
     console.log(error);
   }

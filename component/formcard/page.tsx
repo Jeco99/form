@@ -7,8 +7,8 @@ export default function FormCard({
   form_name,
   form_description,
   field_table,
-  form_id,
-}: fetchDataType) {
+}: // form_id,
+fetchDataType) {
   return (
     <>
       <Box style={{ border: "1px solid black" }}>

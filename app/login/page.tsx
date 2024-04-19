@@ -1,11 +1,16 @@
-import { Container, Flex, TextInput, Button } from "@mantine/core";
+"use client";
+
+import { Container, Flex, TextInput, Button, Title } from "@mantine/core";
 import { login } from "./action";
 import Link from "next/link";
 import LogInWithGoogle from "@/component/googleauth/loginwithgoogle";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
+  const search = searchParams?.get("message");
   return (
-    <Container>
+    <Container h={50} mt={100}>
       <Flex
         mih={50}
         gap="md"
@@ -14,6 +19,8 @@ export default function LoginPage() {
         direction="column"
         wrap="nowrap"
       >
+        <Title order={1}>Welcome</Title>
+        {search}
         <form action={login}>
           <TextInput
             label="Email"
@@ -21,6 +28,9 @@ export default function LoginPage() {
             placeholder="Enter your email address"
             name="email"
             id="email"
+            variant="filled"
+            size="md"
+            w={300}
             required
           />
           <TextInput
@@ -29,22 +39,49 @@ export default function LoginPage() {
             name="password"
             id="password"
             placeholder="Enter your password"
+            variant="filled"
+            size="md"
+            w={300}
+            mt={10}
             required
           />
-          <Flex>
-            <Button variant="filled" color="gray" type="submit">
+          <Flex
+            mih={50}
+            gap="md"
+            justify="center"
+            align="center"
+            direction="column"
+            wrap="wrap"
+            mt={20}
+          >
+            <Button
+              justify="center"
+              fullWidth
+              variant="filled"
+              color="blue"
+              type="submit"
+            >
               Log in
             </Button>
+
+            <Link
+              href={"/signup"}
+              style={{ textDecoration: "none", color: "white", width: "100%" }}
+            >
+              <Button
+                justify="center"
+                fullWidth
+                variant="filled"
+                color="blue"
+                type="button"
+              >
+                Sign Up
+              </Button>
+            </Link>
+
+            <LogInWithGoogle />
           </Flex>
         </form>
-        <Link href={"/signup"}>
-          <Button variant="filled" color="blue" type="button">
-            Sign Up
-          </Button>
-        </Link>
-        <LogInWithGoogle />
-        {/* <button formAction={login}>Log in</button>
-          <button formAction={signup}>Sign up</button> */}
       </Flex>
     </Container>
   );
