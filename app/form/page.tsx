@@ -17,8 +17,10 @@ import {
   SubmitHandler,
   Controller,
 } from "react-hook-form";
-// import createForm from "./action";
+import createForm from "./action";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export type FormData = {
   form_name: string;
@@ -37,8 +39,19 @@ export default function FieldForm() {
     control,
     name: "field",
   });
+  const [errorInsertion, setErrorInsertion] = useState("");
+  const router = useRouter();
 
-  const onSubmit: SubmitHandler<FormData> = (dataForm) => console.log(dataForm);
+  const onSubmit: SubmitHandler<FormData> = async (dataForm) => {
+    const data = await createForm(dataForm);
+    if (data.success) {
+      router.push("/displayform");
+    }
+
+    if (data.error) {
+      setErrorInsertion(data.error);
+    }
+  };
   return (
     <Container my={30}>
       <Link href={"/displayform"}>
@@ -47,6 +60,7 @@ export default function FieldForm() {
       <Box my="xl">
         <form onSubmit={handleSubmit(onSubmit)}>
           <Title ta={"center"}>Form Builder</Title>
+          {errorInsertion}
           <Container>
             <TextInput
               label="Form Name"

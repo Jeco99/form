@@ -45,43 +45,43 @@ export default function LoginPage() {
             mt={10}
             required
           />
-          <Flex
-            mih={50}
-            gap="md"
+
+          <Button
             justify="center"
-            align="center"
-            direction="column"
-            wrap="wrap"
-            mt={20}
+            fullWidth
+            variant="filled"
+            color="blue"
+            type="submit"
+          >
+            Log in
+          </Button>
+        </form>
+        <Flex
+          mih={50}
+          gap="md"
+          justify="center"
+          align="center"
+          direction="column"
+          wrap="wrap"
+          mt={20}
+        >
+          <Link
+            href={"/signup"}
+            style={{ textDecoration: "none", color: "white", width: "100%" }}
           >
             <Button
               justify="center"
               fullWidth
               variant="filled"
               color="blue"
-              type="submit"
+              type="button"
             >
-              Log in
+              Sign Up
             </Button>
+          </Link>
 
-            <Link
-              href={"/signup"}
-              style={{ textDecoration: "none", color: "white", width: "100%" }}
-            >
-              <Button
-                justify="center"
-                fullWidth
-                variant="filled"
-                color="blue"
-                type="button"
-              >
-                Sign Up
-              </Button>
-            </Link>
-
-            <LogInWithGoogle />
-          </Flex>
-        </form>
+          <LogInWithGoogle />
+        </Flex>
       </Flex>
     </Container>
   );
