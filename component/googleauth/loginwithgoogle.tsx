@@ -7,9 +7,15 @@ export default function LogInWithGoogle() {
     const supabase = createClient();
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
+      },
     });
-    console.log(data);
     console.log(error);
+
+    if (data.url) {
+      console.log(data.url);
+    }
   };
 
   return (

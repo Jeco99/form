@@ -8,19 +8,20 @@ import {
   Button,
   Box,
   Title,
+  Flex,
   Group,
 } from "@mantine/core";
-import * as React from "react";
 import {
   useForm,
   useFieldArray,
   SubmitHandler,
   Controller,
 } from "react-hook-form";
+import Options from "@/component/optionselect/page";
 import createForm from "./action";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+// import { useRouter } from "next/navigation";
+// import { useState } from "react";
 
 export type FormData = {
   form_name: string;
@@ -30,6 +31,9 @@ export type FormData = {
     field_type: string;
     field_is_required: boolean;
     field_order: number;
+    field_options: {
+      options: string;
+    }[];
   }[];
 };
 
@@ -39,18 +43,20 @@ export default function FieldForm() {
     control,
     name: "field",
   });
-  const [errorInsertion, setErrorInsertion] = useState("");
-  const router = useRouter();
 
-  const onSubmit: SubmitHandler<FormData> = async (dataForm) => {
-    const data = await createForm(dataForm);
-    if (data.success) {
-      router.push("/displayform");
-    }
+  //   const [errorInsertion, setErrorInsertion] = useState("");
+  //   const router = useRouter();
+  const onSubmit: SubmitHandler<FormData> = (dataForm) => {
+    console.log("form view data", dataForm);
+    createForm(dataForm);
+    // const data = await createForm(dataForm);
+    // if (data.success) {
+    //   router.push("/displayform");
+    // }
 
-    if (data.error) {
-      setErrorInsertion(data.error);
-    }
+    // if (data.error) {
+    //   setErrorInsertion(data.error);
+    // }
   };
   return (
     <Container my={30}>
@@ -60,7 +66,7 @@ export default function FieldForm() {
       <Box my="xl">
         <form onSubmit={handleSubmit(onSubmit)}>
           <Title ta={"center"}>Form Builder</Title>
-          {errorInsertion}
+          {/* {errorInsertion} */}
           <Container>
             <TextInput
               label="Form Name"
@@ -72,8 +78,8 @@ export default function FieldForm() {
             />
             {fields.map((field, index) => {
               return (
-                <div key={field.id}>
-                  <section className={"section"} key={field.id}>
+                <Box key={field.id}>
+                  <Flex gap="md" align="center" direction="row" wrap="wrap">
                     <TextInput
                       label="Label"
                       placeholder="label"
@@ -99,41 +105,46 @@ export default function FieldForm() {
                       )}
                     />
 
-                    {(watch(`field.${index}.field_type`) === "select" ||
-                      watch(`field.${index}.field_type`) === "multiSelect") && (
-                      <h1>Select</h1>
-                    )}
-
                     <Checkbox
                       {...register(`field.${index}.field_is_required` as const)}
                       label="Required"
+                      size="md"
                     />
 
                     <TextInput
                       label="Order"
-                      type="number"
+                      type="text"
                       placeholder="Order"
-                      {...register(`field.${index}.field_order` as const, {
-                        valueAsNumber: true,
-                        required: true,
-                      })}
+                      {...register(`field.${index}.field_order` as const)}
+                      value={`${index + 1}`}
                     />
                     <Button type="button" onClick={() => remove(index)} mt={9}>
                       DELETE
                     </Button>
-                  </section>
-                </div>
+                  </Flex>
+                  {(watch(`field.${index}.field_type`) === "select" ||
+                    watch(`field.${index}.field_type`) === "multiselect") && (
+                    <Options
+                      data={field.field_options}
+                      field_index={index}
+                      register={register}
+                      control={control}
+                    />
+                  )}
+                </Box>
               );
             })}
             <Group mt={20}>
               <Button
                 type="button"
                 onClick={() => {
+                  const orderIncrease = fields.length + 1;
                   append({
                     field_label: "",
                     field_type: "",
                     field_is_required: true,
-                    field_order: 0,
+                    field_order: orderIncrease,
+                    field_options: [],
                   });
                 }}
               >
