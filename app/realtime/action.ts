@@ -21,7 +21,7 @@ export async function PaginationForm(offset: number, limit: number) {
       offsetnumber: offset,
       limitnumber: limit,
     });
-    console.log(data);
+    // console.log(data);
     if (error) {
       throw new Error();
     }

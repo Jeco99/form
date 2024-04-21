@@ -12,11 +12,12 @@ import {
   Container,
   Button,
   Title,
-  TextInput,
   Flex,
 } from "@mantine/core";
 import PaginationDisplay from "@/component/pagination/page";
 import { useRouter } from "next/navigation";
+import SearchBar from "@/component/search/page";
+import { createClient } from "@/utils/supabase/client";
 
 export type fetchDataType = {
   form_id: string;
@@ -40,6 +41,26 @@ export default function DisplayForm({ user }: { user: User | null }) {
   const itemsperpage = 9;
   const totalPages = Math.ceil(totalData / itemsperpage);
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const supabase = createClient();
+
+  //fix the useEffect
+  useEffect(() => {
+    const channel = supabase
+      .channel("form_insert")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "form_table" },
+        () => {
+          router.refresh();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, router]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,12 +72,30 @@ export default function DisplayForm({ user }: { user: User | null }) {
     fetchData();
   }, [currentPage]);
 
-  useEffect(() => {
-    if (currentPage) {
-      router.push(`/pagination?offset=${currentPage}`);
-    }
-  });
+  // useEffect(() => {
+  //   if (currentPage) {
+  //     router.push(`/displayform?offset=${currentPage}&&limit=${itemsperpage}`);
+  //   }
+  // });
 
+  //not a dynamic
+  const handleSearch = (query: string) => {
+    let hasError = true;
+    const searchData = allData?.filter((item) => {
+      const formName = item.form_name
+        .toLowerCase()
+        .includes(query.toLowerCase());
+      const formDescription = item.form_description
+        .toLowerCase()
+        .includes(query.toLowerCase());
+      if (formName || formDescription) {
+        hasError = false;
+      }
+      return formName || formDescription;
+    });
+    setAllData(searchData);
+    setError(hasError ? "Not Found" : null);
+  };
   // console.log(allData);
   // console.log("Total data", totalData);
   return (
@@ -75,10 +114,10 @@ export default function DisplayForm({ user }: { user: User | null }) {
           <Button type="button"> Add Form</Button>
         </Link>
         <Flex>
-          <TextInput placeholder="Search ...." />
+          <SearchBar onSearch={handleSearch} />
           <Button>Sort</Button>
         </Flex>
-
+        {error}
         <Table>
           <Table.Thead>
             <Table.Tr>
